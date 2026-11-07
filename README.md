@@ -4,8 +4,8 @@ Prototipo de arquitectura cósmica para **Paper 1.21.11 y Java 21**, construido 
 
 ## Descargar e instalar
 
-- **[Descargar el plugin JAR](https://github.com/SrChoringon/cosmicarchitect-ia/releases/download/v0.1.0/CosmicArchitect-0.1.0.jar)** — archivo para subir a `plugins/`.
-- **[Descargar el paquete ZIP](https://github.com/SrChoringon/cosmicarchitect-ia/releases/download/v0.1.0/CosmicArchitect-0.1.0.zip)** — JAR, instrucciones en español, plano de ejemplo, pruebas y código.
+- **[Descargar el plugin JAR](https://raw.githubusercontent.com/SrChoringon/cosmicarchitect-ia/main/downloads/CosmicArchitect-0.1.0.jar)** — archivo para subir a `plugins/`.
+- **[Descargar el paquete ZIP](https://raw.githubusercontent.com/SrChoringon/cosmicarchitect-ia/main/downloads/CosmicArchitect-0.1.0.zip)** — JAR, instrucciones en español, plano de ejemplo, pruebas y código.
 - [Ver la versión y sus archivos](https://github.com/SrChoringon/cosmicarchitect-ia/releases/tag/v0.1.0).
 
 1. Detén tu servidor de pruebas y sube el **JAR** a `plugins/`.
