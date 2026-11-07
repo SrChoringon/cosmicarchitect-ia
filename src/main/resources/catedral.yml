@@ -1,0 +1,7 @@
+version: 1
+name: Catedral del Eclipse - Gran Sala Cosmica
+palette: void
+seed: 91347
+rooms:
+  - {id: catedral, type: cathedral, x: 0, z: 0, radius: 40, height: 48}
+links: []

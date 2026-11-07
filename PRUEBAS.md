@@ -1,3 +1,46 @@
+# Validación de CosmicArchitect 0.2.0
+
+Entorno: Java 21.0.13, Paper 1.21.11 build 132, MythicDungeons 2.1.0,
+sin jugadores, ligado a 127.0.0.1, heap máximo de servidor 2 GB. No es Vultam.
+
+## Nueva gran sala cerrada
+
+- Compilación correcta contra la misma API Paper fijada en el proyecto.
+- 35 726 comprobaciones de geometría con heap máximo de 512 MB: correctas.
+  El número incluye verificaciones por celda del suelo, techo y muros.
+- Catedral del ejemplo: 96 652 posiciones. El recuento incluye las posiciones
+  de aire que se despejan en la entrada; no es una medición de memoria.
+- Cada celda de la planta tiene suelo y una cubierta opaca. Los muros exteriores
+  están cerrados; menos del 1 % de posiciones usan cristal.
+- Pasillo central despejado desde la entrada hasta el frente del altar.
+  Las tres filas de escaleras del altar están orientadas hacia el sur.
+- Radios 32 y 48, alturas 36 y 52 y coordenadas negativas: dentro del presupuesto
+  de 250 000 posiciones y con punto de entrada despejado.
+- Se rechazan catedrales con tamaño inválido o mezcladas con otras salas.
+- Prueba de construcción completa con el JAR original de MythicDungeons
+  instalado y activo. Un complemento de auditoría separado verificó todas las
+  96 652 posiciones y sus estados de bloque contra el plano calculado.
+- El punto de entrada está en (0, 81, -52). No quedan tickets de chunks del
+  constructor al finalizar.
+- El nuevo plano se instaló al actualizar sin borrar eclipse.yml ni worlds.yml.
+
+La vista técnica en docs/catedral-interior.png se genera desde el volcado real
+de geometría, usando tools/render_geometry.py (requiere NumPy y Pillow).
+Sus colores, iluminación y formas parciales de bloque son aproximados: no es
+una captura de Minecraft y no valida el aspecto o nivel de luz real en el cliente.
+
+El complemento de auditoría no se distribuye. Siguen apareciendo avisos de red
+ajenos al constructor en las consultas de versiones/autenticación de Paper.
+Los cinco avisos de compilación de constantes GameRule obsoletas siguen presentes.
+
+Pendiente: recorrido con cliente Minecraft, luz real con tus ajustes y paquetes,
+teletransportes con jugadores, concurrencia, TPS/MSPT y memoria en Vultam.
+No hay integración de partidas ni optimización interna de MythicDungeons.
+
+---
+
+## Registro histórico: 0.1.0
+
 # Validación del prototipo 0.1.0
 
 Entorno de prueba: Java 21.0.13, Paper 1.21.11 build 132, sin jugadores;

@@ -1,44 +1,46 @@
-# Crear un plano nuevo con tu suscripción de ChatGPT
+# Planos de gran sala cerrada para ChatGPT — CosmicArchitect 0.2
 
-Copia el siguiente texto en ChatGPT y añade tu descripción al final. Guarda solo
-el contenido YAML de la respuesta en un archivo como `mi_dungeon.yml`.
-Súbelo al panel del hosting en `plugins/CosmicArchitect/plans/`.
-Ejecuta `/cosmic check mi_dungeon` y después `/cosmic build mi_dungeon`.
+Copia el texto siguiente en ChatGPT y añade tu descripción. Guarda solo el YAML
+resultante en `plugins/CosmicArchitect/plans/mi_sala.yml`. Ejecuta
+`/cosmic check mi_sala` y `/cosmic build mi_sala`. No hace falta reiniciar.
 
 ```text
-Diseña una distribución para CosmicArchitect 0.1, Minecraft Paper 1.21.11.
-Devuelve exclusivamente YAML válido, sin comandos, código ni explicaciones.
-El constructor admite estas opciones; no inventes campos ni mecánicas:
+Genera exclusivamente un plano YAML válido para CosmicArchitect 0.2, sin
+comandos, código ni campos inventados. Quiero una sola sala cósmica enorme,
+cerrada, decorada y monumental. El generador tiene un arquetipo cathedral:
 
 version: 1
-name: Texto de hasta 100 caracteres
+name: Catedral del Eclipse
 palette: void
-seed: 412778
+seed: 91347
 rooms:
-  - {id: entrada, type: gateway, x: 0, z: 0, radius: 12, height: 14}
+  - {id: catedral, type: cathedral, x: 0, z: 0, radius: 40, height: 48}
 links: []
 
-Reglas:
-- Entre 1 y 10 salas; cada celda x,z es única y sus valores son enteros entre -3 y 3.
-- La distancia entre centros es 48 bloques por celda; todas las salas tienen el piso en Y=80.
-- IDs únicos con letras minúsculas a-z, números, guion o guion bajo; hasta 32 caracteres.
-- Cada sala tiene id, type, x, z, radius (entero 9..16), height (entero 10..20).
-- type solo admite gateway (umbral rectangular con arco), library (biblioteca rectangular),
-  observatory (cúpula con órbita), sanctum (santuario con altar), arena (arena circular).
-- palette solo admite void (pizarra y violeta), nebula (purpur y magenta), eclipse (negro y ámbar).
-  La paleta se aplica a todo el plano, no por sala.
-- La primera sala es la entrada y debe ser gateway.
-- Cada conexión: {from: id_de_sala, to: otro_id}; máximo 20; sin duplicados.
-- Conectar solo celdas vecinas: abs(x1-x2)+abs(z1-z2)=1.
-- Todas las salas deben ser accesibles desde la entrada. Incluir ramificaciones si encajan.
-- Respetar la temática cósmica, con un ritmo entre espacios pequeños y grandes.
-- Este prototipo no admite enemigos, jefes, botín, trampas, secretos interactivos,
-  pisos múltiples, materiales arbitrarios ni arquitectura libre fuera de esos cinco tipos.
-  Interpreta mi descripción dentro de estas posibilidades.
-- El nombre no activa efectos; solo los campos anteriores cambian la construcción.
+Reglas obligatorias:
+- Mantén una sola sala, type: cathedral y links: [].
+- radius entero 32..48. El ancho es 2*radius+1; el largo, ancho+48.
+- height entero 36..52: altura máxima de la bóveda sobre el suelo.
+- x y z: enteros -3..3; preferiblemente ambos 0.
+- id: letras a-z, números, guion o guion bajo; de 1 a 32 caracteres.
+- name: texto de hasta 100 caracteres. Usa un nombre sin caracteres YAML especiales.
+- palette solo admite void, nebula o eclipse. Usa void para amatista con piedra
+  oscura, eclipse para detalles ámbar o nebula para acentos magenta. La envolvente
+  de la catedral siempre es opaca y oscura; la paleta cambia algunos acentos.
+- seed: entero. Cambia detalles de textura y distribución de cristales pequeños.
+- No hay parámetros para mover los pilares ni inventar nuevas esculturas.
+- No admite enemigos, jefes, trampas, botín, pisos múltiples ni scripts.
+- Interpreta mi descripción dentro de estos límites. El nombre no cambia la
+  arquitectura y la temática no añade automáticamente materiales o funciones.
 
-Mi descripción: [ESCRIBE AQUÍ LO QUE QUIERES]
+Mi descripción: [ESCRIBE AQUÍ]
 ```
 
-No hay conexión automática entre el hosting y tu cuenta de ChatGPT.
-El plugin no usa contraseñas, cookies, claves de API ni consultas de pago.
+El tipo `cathedral` genera una nave con capillas, bóveda, columnas, puerta
+monumental y altar de eclipse. Esta versión tiene esa arquitectura definida;
+ChatGPT elige los parámetros admitidos, no programa formas arbitrarias.
+Los cinco arquetipos pequeños de 0.1 siguen funcionando, pero este prompt
+pide específicamente la nueva gran sala cerrada.
+
+La transferencia desde tu suscripción de ChatGPT es manual. No uses cookies,
+contraseñas ni claves de tu cuenta en el plugin.

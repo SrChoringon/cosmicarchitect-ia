@@ -1,7 +1,7 @@
-# CosmicArchitect 0.1.0 — prototipo para Paper 1.21.11 / Java 21
+# CosmicArchitect 0.2.0 — prototipo para Paper 1.21.11 / Java 21
 
 Constructor independiente de arquitectura cósmica a partir de planos YAML.
-Genera los bloques desde cero mediante cinco arquetipos procedurales.
+Genera los bloques desde cero mediante seis arquetipos procedurales.
 Puede convivir con MythicDungeons, pero esta versión **no importa ni registra
 dungeons en MythicDungeons**, no modifica su JAR ni sus configuraciones.
 No es todavía un sistema de partidas, jefes, objetivos o recompensas.
@@ -9,10 +9,10 @@ No es todavía un sistema de partidas, jefes, objetivos o recompensas.
 ## Primera prueba en el panel de Vultam
 
 1. Detén el servidor de pruebas.
-2. Sube `CosmicArchitect-0.1.0.jar` a `plugins/`. Conserva MythicDungeons si lo usas.
+2. Retira el JAR anterior de CosmicArchitect y sube `CosmicArchitect-0.2.0.jar` a `plugins/`. Debe quedar solo una versión. Conserva MythicDungeons si lo usas.
 3. Arranca con Java 21 y Paper 1.21.11. No requiere librerías adicionales.
-4. Como OP, ejecuta `/cosmic check eclipse`. El ejemplo se instala automáticamente.
-5. Ejecuta `/cosmic build eclipse` y consulta `/cosmic status`.
+4. Como OP, ejecuta `/cosmic check catedral`. El ejemplo se instala automáticamente.
+5. Ejecuta `/cosmic build catedral` y consulta `/cosmic status`.
 6. Al terminar verás `/cosmic visit cosmic_<identificador>`; copia ese comando.
 7. Recorre la construcción. Regresa con `/cosmic leave`.
 
@@ -22,12 +22,18 @@ No cambia el mundo en el que estabas ni el modo de juego de los jugadores.
 La visita es una inspección física: no hay partida de dungeon ni protección
 contra editar bloques. Evita dar el permiso a visitantes en producción.
 
-## El ejemplo: Santuario del Sol Eclipsado
+## El ejemplo nuevo: Catedral del Eclipse
 
-Entrada con arco de obsidiana llorosa, archivo estelar, observatorio abovedado,
-santuario lateral y arena circular con un anillo elevado. Puentes iluminados
-con barandillas y marquesinas conectan las cinco salas sobre el vacío.
-Es una primera muestra de arquitectura; el nombre de la arena no crea un jefe.
+Una sola sala cerrada de 81 × 129 bloques, bóveda de 48 de altura sobre el suelo,
+muros y techo opacos, pilares con capiteles, nervaduras, cornisas, capillas,
+bibliotecas, estatuas, mosaico y altar escalonado. Una esfera eclipsada con
+anillos ocupa el espacio sobre el altar. Hay luces cubiertas por alfombras,
+lámparas colgantes y velas; no hay filas de cubos luminosos en la bóveda.
+
+El plano `catedral.yml` se instala automáticamente en `plans/` al actualizar.
+Los archivos existentes no se sobrescriben. El antiguo `eclipse.yml` mantiene
+las cinco salas pequeñas de cristal de 0.1: no es el ejemplo nuevo.
+La actualización no altera mundos ya construidos. Genera un mundo nuevo.
 
 ## Nuevas descripciones
 
@@ -37,7 +43,9 @@ Los nombres de archivo deben tener 1..40 caracteres a-z, 0-9, guion o guion bajo
 El comando recibe el nombre sin `.yml`. No es necesario reiniciar para importar planos.
 
 Los planos se validan: hasta 64 KB, diez salas, conexiones entre vecinas,
-radios 9..16, alturas 10..20 y hasta 250 000 posiciones de bloque.
+tipos antiguos con radios 9..16 y alturas 10..20, y hasta 250 000 posiciones.
+El tipo nuevo `cathedral` usa radio 32..48 y altura 36..52, una sola sala por
+plano, `links: []`; su largo es el ancho más 48 bloques.
 Solo se permiten los materiales de las tres paletas incluidas.
 El esquema no acepta scripts, comandos de consola ni URLs.
 
@@ -85,8 +93,9 @@ No borres la carpeta principal `world` ni las carpetas de MythicDungeons.
 
 ## Límites conocidos
 
-- La calidad depende de los cinco arquetipos y de sus combinaciones; el texto
-  no genera formas ilimitadas. Esta versión usa un solo nivel y puentes rectos.
+- La calidad depende de los arquetipos admitidos y de sus parámetros; el texto
+  no genera formas ilimitadas. La catedral usa una sola nave con altar escalonado; los tipos antiguos usan
+  un nivel y puentes rectos.
 - No conecta ChatGPT al juego. La transferencia del YAML es manual.
 - No modifica ni optimiza internamente MythicDungeons. Para medir sus cuellos de
   botella hace falta perfilarlo con tus dungeons y carga real.
@@ -96,8 +105,8 @@ No borres la carpeta principal `world` ni las carpetas de MythicDungeons.
 
 ## Código fuente y compilación
 
-Incluido en `source/`. Requiere Python 3, Java 21 y conexión HTTPS a Maven Central
+En el ZIP está en `source/`; en GitHub, en la raíz del repositorio. Requiere Python 3, Java 21 y conexión HTTPS a Maven Central
 y al repositorio de Paper. Ejecuta `python3 build.py`. Descarga ECJ como compilador,
-resuelve dependencias fijadas y ejecuta las pruebas de geometría.
+resuelve dependencias fijadas y ejecuta las pruebas de geometría, incluyendo el cierre de la catedral.
 Las dependencias son de compilación; no se empaquetan ni sustituyen Paper.
 El JAR original de MythicDungeons no se redistribuye en este paquete.

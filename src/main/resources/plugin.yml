@@ -1,5 +1,5 @@
 name: CosmicArchitect
-version: 0.1.0
+version: 0.2.0
 main: dev.cosmic.CosmicArchitect
 api-version: '1.21.11'
 description: Prototipo de arquitectura cosmica mediante planos de ChatGPT.

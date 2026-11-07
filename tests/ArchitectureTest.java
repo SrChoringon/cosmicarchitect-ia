@@ -61,6 +61,41 @@ public class ArchitectureTest {
         StringBuilder out=new StringBuilder();
         for(var e:blocks.entrySet()) if(e.getKey().y()==80) out.append(e.getKey().x()).append(',').append(e.getKey().z()).append(',').append(e.getValue()).append('\n');
         Files.writeString(Path.of("build/floor.csv"),out);
+        Plan cathedral=new Plan("cathedral","void",91347,List.of(new Room("nave","cathedral",0,0,40,48)),List.of());
+        Map<Pos,String> hall=new Architecture().generate(cathedral);
+        Pos spawn=Architecture.spawn(cathedral);
+        check(spawn.z()==-52 && walkable(hall,spawn.x(),spawn.z()),"Cathedral entrance spawn blocked");
+        check(hall.size()<Architecture.MAX_BLOCKS,"Cathedral exceeds memory budget");
+        check(hall.values().stream().filter(m->m.contains("GLASS")).count()<hall.size()/100,"Too much cathedral glass");
+        // Every tile must have a solid floor and an opaque roof above it.
+        for(int x=-40;x<=40;x++) for(int z=-64;z<=64;z++) {
+            check(!hall.getOrDefault(new Pos(x,80,z),"AIR").equals("AIR"),"Missing cathedral floor");
+            boolean roof=false;
+            for(int y=110;y<=129;y++) {
+                String m=hall.getOrDefault(new Pos(x,y,z),"AIR");
+                if(m.equals("DEEPSLATE_BRICKS") || m.equals("DEEPSLATE_TILES")) roof=true;
+            }
+            check(roof,"Sky hole in cathedral");
+        }
+        for(int z=-64;z<=64;z++) for(int y=81;y<116;y++) for(int x:new int[]{-40,40})
+            check(!hall.getOrDefault(new Pos(x,y,z),"AIR").equals("AIR"),"Open side wall");
+        for(int x=-40;x<=40;x++) for(int y=81;y<116;y++) for(int z:new int[]{-64,64})
+            check(!hall.getOrDefault(new Pos(x,y,z),"AIR").equals("AIR"),"Open end wall");
+        for(int z=-52;z<=10;z++) check(walkable(hall,0,z),"Main aisle blocked");
+        check(hall.get(new Pos(0,81,13)).contains("stairs[facing=south"),"Missing first altar stair");
+        check(hall.get(new Pos(0,83,19)).contains("stairs[facing=south"),"Missing third altar stair");
+        rejected(new Plan("bad","void",1,List.of(new Room("nave","cathedral",0,0,20,48)),List.of()));
+        rejected(new Plan("bad","void",1,List.of(new Room("nave","cathedral",0,0,40,48),new Room("other","arena",1,0,12,16)),List.of(new Link("nave","other"))));
+        for(int radius:new int[]{32,48}) for(int height:new int[]{36,52}) {
+            Plan edge=new Plan("edge","eclipse",21,List.of(new Room("nave","cathedral",-1,-1,radius,height)),List.of());
+            Map<Pos,String> shape=new Architecture().generate(edge);
+            check(shape.size()<Architecture.MAX_BLOCKS,"Cathedral edge exceeds budget");
+            Pos entrance=Architecture.spawn(edge);check(walkable(shape,entrance.x(),entrance.z()),"Edge spawn blocked");
+        }
+        StringBuilder scene=new StringBuilder();
+        for(var e:hall.entrySet()) {var pos=e.getKey();scene.append(pos.x()).append('\t').append(pos.y()).append('\t').append(pos.z()).append('\t').append(e.getValue()).append('\n');}
+        Files.writeString(Path.of("build/cathedral.tsv"),scene);
+        System.out.println("Cathedral: "+hall.size()+" positions; opaque shell, clear aisle and accessible stair runs checked.");
         System.out.println("PASS: "+checks+" checks; demo "+blocks.size()+" positions, largest "+big.size()+" positions; "+((System.nanoTime()-started)/1_000_000)+" ms total.");
     }
 }

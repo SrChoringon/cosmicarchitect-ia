@@ -29,19 +29,21 @@ public final class CosmicArchitect extends JavaPlugin implements CommandExecutor
         saveDefaultConfig();
         plansFolder = new File(getDataFolder(),"plans");
         plansFolder.mkdirs();
-        if (!new File(plansFolder,"eclipse.yml").exists()) saveResource("eclipse.yml",false);
-        File example = new File(getDataFolder(),"eclipse.yml");
-        if (example.exists() && !new File(plansFolder,"eclipse.yml").exists()) {
-            try { Files.copy(example.toPath(),new File(plansFolder,"eclipse.yml").toPath()); }
-            catch(IOException ex) { getLogger().log(Level.WARNING,"No se pudo copiar el plano de ejemplo",ex); }
-        }
+        installExample("eclipse.yml");
+        installExample("catedral.yml");
         registryFile=new File(getDataFolder(),"worlds.yml");
         registry=YamlConfiguration.loadConfiguration(registryFile);
         tickBlocks=Math.clamp(getConfig().getInt("blocks-per-tick",300),25,2000);
         maxWorlds=Math.clamp(getConfig().getInt("max-loaded-worlds",2),1,5);
         tickNanos=(long)(Math.clamp(getConfig().getDouble("milliseconds-per-tick",3),0.5,10)*1_000_000);
         Objects.requireNonNull(getCommand("cosmic")).setExecutor(this);
-        getLogger().info("CosmicArchitect 0.1: constructor independiente; no registra partidas de MythicDungeons.");
+        getLogger().info("CosmicArchitect 0.2: gran sala cerrada disponible con /cosmic build catedral.");
+    }
+    private void installExample(String name) {
+        File destination=new File(plansFolder,name);
+        if(destination.exists()) return;
+        try(InputStream in=Objects.requireNonNull(getResource(name))) { Files.copy(in,destination.toPath()); }
+        catch(IOException ex) { getLogger().log(Level.WARNING,"No se pudo instalar "+name,ex); }
     }
     @Override public void onDisable() {
         if(active!=null) stop(active,"interrupted");
@@ -166,7 +168,7 @@ public final class CosmicArchitect extends JavaPlugin implements CommandExecutor
         // Never open an existing world, including one not owned by this plugin.
         if(new File(Bukkit.getWorldContainer(),name).exists()) throw new IllegalStateException("Colision de nombre de mundo; reintenta.");
         // Resolve all material data before making the world.
-        blocks.values().stream().distinct().forEach(m->job.materials.put(m,Objects.requireNonNull(Material.matchMaterial(m)).createBlockData()));
+        blocks.values().stream().distinct().forEach(m->job.materials.put(m,m.contains(":")?Bukkit.createBlockData(m):Objects.requireNonNull(Material.matchMaterial(m)).createBlockData()));
         TreeMap<Long,List<Map.Entry<Architecture.Pos,String>>> chunks=new TreeMap<>();
         for(var e:blocks.entrySet()) {
             Architecture.Pos p=e.getKey();
@@ -184,9 +186,9 @@ public final class CosmicArchitect extends JavaPlugin implements CommandExecutor
         job.world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
         job.world.setGameRule(GameRule.DO_FIRE_TICK,false);
         job.world.setGameRule(GameRule.RANDOM_TICK_SPEED,0);
-        Architecture.Room first=job.plan.rooms().getFirst();
+        Architecture.Pos spawn=Architecture.spawn(job.plan);
         registry.set(name+".state","building"); registry.set(name+".title",job.plan.name());
-        registry.set(name+".x",first.x()*48); registry.set(name+".z",first.z()*48); saveRegistry();
+        registry.set(name+".x",spawn.x()); registry.set(name+".z",spawn.z()); saveRegistry();
         reply(job.sender,"Construyendo "+job.plan.name()+" en "+name+" ("+job.total+" bloques). /cosmic status");
         job.timer=Bukkit.getScheduler().runTaskTimer(this,()->tick(job),1,1);
     }
@@ -227,8 +229,8 @@ public final class CosmicArchitect extends JavaPlugin implements CommandExecutor
     }
     private void complete(Job job) {
         String name=job.world.getName();
-        Architecture.Room first=job.plan.rooms().getFirst();
-        job.world.setSpawnLocation(first.x()*48,Architecture.FLOOR+1,first.z()*48);
+        Architecture.Pos spawn=Architecture.spawn(job.plan);
+        job.world.setSpawnLocation(spawn.x(),spawn.y(),spawn.z());
         stop(job,"complete");
         reply(job.sender,"Listo: "+job.done+" bloques. /cosmic visit "+name);
     }

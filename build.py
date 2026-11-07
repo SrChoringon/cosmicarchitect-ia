@@ -5,6 +5,7 @@ import pathlib
 import subprocess
 import urllib.request
 import zipfile
+import re
 
 ROOT = pathlib.Path(__file__).resolve().parent
 DEPS = ROOT / 'deps'
@@ -52,7 +53,8 @@ subprocess.run(['java', '-jar', str(compiler), '-21', '-proc:none', '-cp', str(C
                 '-d', str(ROOT / 'build/test-classes'), str(ROOT / 'tests/ArchitectureTest.java')], check=True, cwd=ROOT)
 subprocess.run(['java', '-Xmx512M', '-cp', os.pathsep.join([str(CLASSES), str(ROOT / 'build/test-classes')]),
                 'ArchitectureTest'], check=True, cwd=ROOT)
-target = ROOT / 'build/CosmicArchitect-0.1.0.jar'
+version = re.search(r'^version: (.+)$', (ROOT / 'src/main/resources/plugin.yml').read_text(), re.M).group(1).strip()
+target = ROOT / ('build/CosmicArchitect-' + version + '.jar')
 with zipfile.ZipFile(target, 'w', zipfile.ZIP_DEFLATED) as archive:
     for folder in [CLASSES, ROOT / 'src/main/resources']:
         for path in sorted(folder.rglob('*')):
