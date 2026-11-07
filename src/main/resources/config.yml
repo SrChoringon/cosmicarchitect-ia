@@ -1,0 +1,5 @@
+# Ambos limites se aplican por tick. No incluyen la creacion inicial del mundo.
+blocks-per-tick: 300
+milliseconds-per-tick: 3
+# Mundos de este complemento cargados simultaneamente (no cuenta los demas).
+max-loaded-worlds: 2

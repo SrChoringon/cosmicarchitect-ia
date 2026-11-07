@@ -1,0 +1,14 @@
+name: CosmicArchitect
+version: 0.1.0
+main: dev.cosmic.CosmicArchitect
+api-version: '1.21.11'
+description: Prototipo de arquitectura cosmica mediante planos de ChatGPT.
+softdepend: [MythicDungeons]
+commands:
+  cosmic:
+    description: Importar y construir planos cosmicos
+    usage: /cosmic list|check|build|status|cancel|visit|leave|unload
+    permission: cosmic.admin
+permissions:
+  cosmic.admin:
+    default: op

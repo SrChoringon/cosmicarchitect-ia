@@ -1,0 +1,15 @@
+version: 1
+name: Santuario del Sol Eclipsado
+palette: void
+seed: 412778
+rooms:
+  - {id: umbral, type: gateway, x: 0, z: 0, radius: 12, height: 14}
+  - {id: archivo, type: library, x: 1, z: 0, radius: 14, height: 14}
+  - {id: observatorio, type: observatory, x: 1, z: 1, radius: 15, height: 18}
+  - {id: santuario, type: sanctum, x: 0, z: 1, radius: 13, height: 16}
+  - {id: eclipse, type: arena, x: 1, z: 2, radius: 16, height: 20}
+links:
+  - {from: umbral, to: archivo}
+  - {from: archivo, to: observatorio}
+  - {from: observatorio, to: santuario}
+  - {from: observatorio, to: eclipse}
